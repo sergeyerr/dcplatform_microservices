@@ -1,0 +1,31 @@
+import pandas as pd
+import os
+import json
+# будет подставлять по шаблону из sklearn.linear_model.LinearRegression
+from sklearn.cluster import KMeans
+
+
+folder = os.getenv('INPUT_FOLDER', '../')
+data = pd.read_csv(os.path.join(folder, 'data.csv'))
+with open(os.path.join(folder, 'params.json'), "r", encoding='utf-8') as read_file:
+    params_raw = json.load(read_file)
+
+params = {}
+for param in params_raw:
+    type = param['type']
+    if param['value'] == 'None':
+        params[param['name']] = None
+    elif type == 'int':
+        params[param['name']] = int(param['value'])
+    elif type == 'string':
+        params[param['name']] = str(param['value'])
+    elif type == 'float':
+        params[param['name']] = float(param['value'])
+
+
+target = data['target']
+data = data.drop(['target'], axis=1)
+
+reg = KMeans(**params)
+reg.fit(data, target)
+print('Успешный запуск')

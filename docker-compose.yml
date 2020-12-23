@@ -1,0 +1,49 @@
+version: "3"
+services:
+    docker_gen:
+      build: ./docker_gen
+      privileged: true
+      volumes:
+       - //var/run/docker.sock:/var/run/docker.sock
+       - E:\Desktop\kurch_10_trim_code\ontologies:/ontologies
+      environment:
+      - ONTOLOGIES_PATH=/ontologies
+    docker_runner:
+      build: ./docker_runner
+      privileged: true
+      volumes:
+        - input:/input
+        - E:\Desktop\kurch_10_trim_code\ontologies:/ontologies
+        - //var/run/docker.sock:/var/run/docker.sock
+      environment:
+        - INPUT_PATH=/input
+        - ONTOLOGIES_PATH=/ontologies
+    ont_proxy:
+      build: ./ont_proxy
+      volumes:
+      - E:\Desktop\kurch_10_trim_code\ontologies:/ontologies
+      - E:\Desktop\kurch_10_trim_code\uploads:/uploads
+      environment:
+      - UPLOADS_PATH=/uploads
+      - ONTOLOGIES_PATH=/ontologies
+    scripter:
+      build: ./scripter
+      volumes:
+      - E:\Desktop\kurch_10_trim_code\ontologies:/ontologies
+      - E:\Desktop\kurch_10_trim_code\templates:/templates
+      environment:
+      - SCRIPTS_DIR=/templates
+      - ONTOLOGIES_PATH=/ontologies
+    nginx_server:
+     build: ./nginx
+     ports:
+      - "80:80"
+
+volumes:
+  input:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: E:\Desktop\kurch_10_trim_code\input
+    

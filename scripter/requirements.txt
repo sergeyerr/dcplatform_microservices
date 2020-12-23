@@ -1,0 +1,6 @@
+numpy==1.19.3
+pandas
+scikit-learn
+flask
+Jinja2
+flask_cors

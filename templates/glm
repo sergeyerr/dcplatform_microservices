@@ -1,0 +1,40 @@
+library(rms)
+library(futile.logger)
+library(jsonlite)
+
+flog.threshold(INFO)
+flog.appender(appender.file('logreg.log'))
+
+flog.info("Reading input csv and params json")
+
+env <- Sys.getenv("INPUT_FOLDER")
+data <- read.csv(file.path(env, "data.csv"))
+params <- fromJSON(file.path(env, "params.json"),
+                   simplifyDataFrame=TRUE)
+
+summary(params)
+summary(data)
+
+model_row = params[which(params$name == "model")]
+singular_row = params[which(params$name == "singular.ok")]
+
+try(params_lst <- list(model = eval(parse(text=model_row$value)),
+                   singular.ok = eval(parse(text=singular_row$value))))
+
+flog.info("Preparing data for training")
+
+train <- data[, !(names(data) %in% c("target"))]
+target <- data[c("target")]
+
+flog.info("Estimating model parameters using maximum-likelihood")
+
+# https://www.rdocumentation.org/packages/stats/versions/3.6.2/topics/glm
+M1 <- glm(target ~ age + sex + cp + trestbps + chol + fbs + restecg
+          + thalach + exang + oldpeak + slope + ca + thal,
+          family = binomial, data = data)
+
+
+flog.info(summary(M1))
+
+# flog.info("Predicting values")
+# probs <- predict(M1, type = "response")

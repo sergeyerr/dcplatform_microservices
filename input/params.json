@@ -1,0 +1,30 @@
+[
+    {
+        "class": "Характеристический параметр",
+        "domain": "bool",
+        "name": "fit_intercept",
+        "type": "bool",
+        "value": "True"
+    },
+    {
+        "class": "Cпефицический параметр",
+        "domain": "bool",
+        "name": "Normalize",
+        "type": "bool",
+        "value": "False"
+    },
+    {
+        "class": "Cпефицический параметр",
+        "domain": "bool",
+        "name": "copy_X",
+        "type": "bool",
+        "value": "True"
+    },
+    {
+        "class": "Параметр, отвечающий за использование системных ресурсов",
+        "domain": "positive_ignorable_int",
+        "name": "n_jobs",
+        "type": "int",
+        "value": "None"
+    }
+]
